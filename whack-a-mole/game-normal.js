@@ -13,6 +13,10 @@ window.onload = function () {
 
 
     startBtn.addEventListener('click', function () {
+        titleH1.innerHTML="WHACK-A-MOLE!";
+        timeUp=false;
+        score=0;
+        scoreBoard.innerHTML=score;
         showBtnAnimation();
         startGame();
     }, false);
@@ -26,11 +30,39 @@ window.onload = function () {
             startBtn.classList.remove('animate');
             startBtn.style.display = 'none';
         }, 700);
+
+        setTimeout(() => {
+            titleH1.innerHTML="TIME UP!";
+            startBtn.innerHTML="Replay!";
+            startBtn.style.display='inline-block';
+            timeUp=true;
+        }, gameTime);
     }
 
 
     function startGame() {
-        // TODO: 写开始新游戏后发生的事
+        if(!timeUp){
+            let i=Math.round(Math.random()*5);
+            let num=(i+1).toString();
+            holes[i].classList.remove('hole'+num);
+            holes[i].classList.add('up');
+            moles[i].addEventListener('click',addscore,false);
+            setTimeout(()=>{
+                holes[i].classList.remove('up');
+                holes[i].classList.add('hole'+num);
+            },400);
+            setTimeout(()=>{
+                moles[i].removeEventListener('click',addscore,false);
+            },800);
+            setTimeout(()=>{
+                startGame();
+            },400);
+        }
+    }
+
+    function addscore(){
+        score+=1;
+        scoreBoard.innerHTML=score;
     }
 
 };
